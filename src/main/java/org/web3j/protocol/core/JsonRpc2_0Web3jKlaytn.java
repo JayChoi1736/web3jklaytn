@@ -1,0 +1,127 @@
+/*
+ * Copyright 2019 Web3 Labs Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ */
+package org.web3j.protocol.core;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+
+import io.reactivex.Flowable;
+
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.Web3jService;
+import org.web3j.protocol.core.methods.request.ShhFilter;
+import org.web3j.protocol.core.methods.request.ShhPost;
+import org.web3j.protocol.core.methods.request.Transaction;
+import org.web3j.protocol.core.methods.response.BooleanResponse;
+import org.web3j.protocol.core.methods.response.DbGetHex;
+import org.web3j.protocol.core.methods.response.DbGetString;
+import org.web3j.protocol.core.methods.response.DbPutHex;
+import org.web3j.protocol.core.methods.response.DbPutString;
+import org.web3j.protocol.core.methods.response.EthAccounts;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.EthBlockNumber;
+import org.web3j.protocol.core.methods.response.EthChainId;
+import org.web3j.protocol.core.methods.response.EthCoinbase;
+import org.web3j.protocol.core.methods.response.EthCompileLLL;
+import org.web3j.protocol.core.methods.response.EthCompileSerpent;
+import org.web3j.protocol.core.methods.response.EthCompileSolidity;
+import org.web3j.protocol.core.methods.response.EthEstimateGas;
+import org.web3j.protocol.core.methods.response.EthFeeHistory;
+import org.web3j.protocol.core.methods.response.EthFilter;
+import org.web3j.protocol.core.methods.response.EthGasPrice;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.core.methods.response.EthGetBlockReceipts;
+import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByHash;
+import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByNumber;
+import org.web3j.protocol.core.methods.response.EthGetCode;
+import org.web3j.protocol.core.methods.response.EthGetCompilers;
+import org.web3j.protocol.core.methods.response.EthGetStorageAt;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
+import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockHash;
+import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockNumber;
+import org.web3j.protocol.core.methods.response.EthGetWork;
+import org.web3j.protocol.core.methods.response.EthHashrate;
+import org.web3j.protocol.core.methods.response.EthLog;
+import org.web3j.protocol.core.methods.response.EthMaxPriorityFeePerGas;
+import org.web3j.protocol.core.methods.response.EthMining;
+import org.web3j.protocol.core.methods.response.EthProtocolVersion;
+import org.web3j.protocol.core.methods.response.EthSign;
+import org.web3j.protocol.core.methods.response.EthSubmitHashrate;
+import org.web3j.protocol.core.methods.response.EthSubmitWork;
+import org.web3j.protocol.core.methods.response.EthSubscribe;
+import org.web3j.protocol.core.methods.response.EthSyncing;
+import org.web3j.protocol.core.methods.response.EthTransaction;
+import org.web3j.protocol.core.methods.response.EthUninstallFilter;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.protocol.core.methods.response.NetListening;
+import org.web3j.protocol.core.methods.response.NetPeerCount;
+import org.web3j.protocol.core.methods.response.NetVersion;
+import org.web3j.protocol.core.methods.response.ShhAddToGroup;
+import org.web3j.protocol.core.methods.response.ShhHasIdentity;
+import org.web3j.protocol.core.methods.response.ShhMessages;
+import org.web3j.protocol.core.methods.response.ShhNewFilter;
+import org.web3j.protocol.core.methods.response.ShhNewGroup;
+import org.web3j.protocol.core.methods.response.ShhNewIdentity;
+import org.web3j.protocol.core.methods.response.ShhUninstallFilter;
+import org.web3j.protocol.core.methods.response.ShhVersion;
+import org.web3j.protocol.core.methods.response.TxPoolStatus;
+import org.web3j.protocol.core.methods.response.Web3ClientVersion;
+import org.web3j.protocol.core.methods.response.Web3Sha3;
+import org.web3j.protocol.core.methods.response.admin.AdminDataDir;
+import org.web3j.protocol.core.methods.response.admin.AdminNodeInfo;
+import org.web3j.protocol.core.methods.response.admin.AdminPeers;
+import org.web3j.protocol.rx.JsonRpc2_0Rx;
+import org.web3j.protocol.websocket.events.LogNotification;
+import org.web3j.protocol.websocket.events.NewHeadsNotification;
+import org.web3j.utils.Async;
+import org.web3j.utils.Numeric;
+
+/** JSON-RPC 2.0 factory implementation. */
+public class JsonRpc2_0Web3jKlaytn extends JsonRpc2_0Web3j {
+
+    public JsonRpc2_0Web3jKlaytn(Web3jService web3jService) {
+        super(web3jService, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
+    }
+
+    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
+            klaySendTransaction(Transaction transaction) {
+        return new Request<>(
+                "klay_sendTransaction",
+                Arrays.asList(transaction),
+                web3jService,
+                org.web3j.protocol.core.methods.response.EthSendTransaction.class);
+    }
+
+    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
+    klaySendRawTransaction(String signedTransactionData) {
+return new Request<>(
+        "klay_sendRawTransaction",
+        Arrays.asList(signedTransactionData),
+        web3jService,
+        org.web3j.protocol.core.methods.response.EthSendTransaction.class);
+}
+
+    public Request<?, EthChainId> klayChainId() {
+        return new Request<>(
+                "klay_chainId", Collections.<String>emptyList(), web3jService, EthChainId.class);
+    }
+
+}
+
