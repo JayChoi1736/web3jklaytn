@@ -15,21 +15,13 @@ package org.web3j.crypto;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.web3j.crypto.transaction.account.AccountKey;
 import org.web3j.crypto.transaction.type.ITransaction;
-import org.web3j.crypto.transaction.type.LegacyTransaction;
-import org.web3j.crypto.transaction.type.Transaction1559;
-import org.web3j.crypto.transaction.type.Transaction2930;
-import org.web3j.crypto.transaction.type.TransactionType;
 import org.web3j.crypto.transaction.type.TxType;
+import org.web3j.crypto.transaction.type.TxType.Type;
 import org.web3j.crypto.transaction.type.TxTypeAccountUpdate;
-import org.web3j.crypto.transaction.type.TxTypeSmartContractDeploy;
-import org.web3j.crypto.transaction.type.TxTypeSmartContractExecution;
-import org.web3j.crypto.transaction.type.TxTypeValueTransfer;
-import org.web3j.crypto.transaction.type.TxTypeValueTransferMemo;
 import org.web3j.crypto.transaction.type.TxTypeCancel;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedAccountUpdate;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedAccountUpdateWithRatio;
@@ -41,11 +33,12 @@ import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedSmartContractExecutio
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedSmartContractExecutionWithRatio;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedValueTransfer;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedValueTransferMemo;
-import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedValueTransferWithRatio;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedValueTransferMemoWithRatio;
-import org.web3j.crypto.transaction.type.TxType.Type;
-
-import jnr.ffi.Struct.id_t;
+import org.web3j.crypto.transaction.type.TxTypeFeeDelegatedValueTransferWithRatio;
+import org.web3j.crypto.transaction.type.TxTypeSmartContractDeploy;
+import org.web3j.crypto.transaction.type.TxTypeSmartContractExecution;
+import org.web3j.crypto.transaction.type.TxTypeValueTransfer;
+import org.web3j.crypto.transaction.type.TxTypeValueTransferMemo;
 
 /**
  * Transaction class used for signing transactions locally.<br>

@@ -20,12 +20,15 @@
 
 package org.web3j.crypto;
 
-import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Keys;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
-
-import java.util.*;
 
 public class KlayCredentials {
     private final List<ECKeyPair> ecKeyPairForTransactionList;

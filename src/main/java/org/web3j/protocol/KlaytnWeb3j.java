@@ -14,12 +14,8 @@ package org.web3j.protocol;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.web3j.protocol.core.Batcher;
-import org.web3j.protocol.core.Ethereum;
 import org.web3j.protocol.core.JsonRpc2_0Web3j;
 import org.web3j.protocol.core.JsonRpc2_0Web3jKlaytn;
-import org.web3j.protocol.core.Klaytn;
-import org.web3j.protocol.rx.Web3jRx;
 
 /** JSON-RPC Request object building factory. */
 public interface KlaytnWeb3j extends Web3j {

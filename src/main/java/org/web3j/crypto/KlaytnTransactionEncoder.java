@@ -12,19 +12,10 @@
  */
 package org.web3j.crypto;
 
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.bouncycastle.util.encoders.Hex;
-import org.web3j.crypto.exception.CryptoWeb3jException;
 import org.web3j.crypto.transaction.fee.FeePayer;
 import org.web3j.crypto.transaction.type.AbstractTxType;
 import org.web3j.crypto.transaction.type.TxType;
+import org.web3j.crypto.transaction.type.TxType.Type;
 import org.web3j.crypto.transaction.type.TxTypeAccountUpdate;
 import org.web3j.crypto.transaction.type.TxTypeCancel;
 import org.web3j.crypto.transaction.type.TxTypeFeeDelegate;
@@ -42,19 +33,7 @@ import org.web3j.crypto.transaction.type.TxTypeSmartContractDeploy;
 import org.web3j.crypto.transaction.type.TxTypeSmartContractExecution;
 import org.web3j.crypto.transaction.type.TxTypeValueTransfer;
 import org.web3j.crypto.transaction.type.TxTypeValueTransferMemo;
-import org.web3j.crypto.transaction.type.TxType.Type;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
-import org.web3j.utils.BytesUtils;
-import org.web3j.utils.Numeric;
 import org.web3j.utils.KlayTransactionUtils;
-
-import jnr.ffi.Struct.id_t;
-
-import static org.web3j.crypto.Sign.CHAIN_ID_INC;
-import static org.web3j.crypto.Sign.LOWER_REAL_V;
 
 /**
  * Create RLP encoded transaction, implementation as per p4 of the <a

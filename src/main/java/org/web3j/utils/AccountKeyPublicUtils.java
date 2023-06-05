@@ -1,14 +1,13 @@
 package org.web3j.utils;
 
+import java.math.BigInteger;
+
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.asn1.x9.X9IntegerConverter;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.math.ec.ECPoint;
 import org.web3j.crypto.transaction.account.AccountKeyPublic;
-import org.web3j.utils.Numeric;
-
-import java.math.BigInteger;
 
 public class AccountKeyPublicUtils {
 
