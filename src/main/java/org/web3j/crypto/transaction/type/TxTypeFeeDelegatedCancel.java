@@ -22,13 +22,13 @@ import org.web3j.utils.Numeric;
 public class TxTypeFeeDelegatedCancel extends TxTypeFeeDelegate {
 
     protected TxTypeFeeDelegatedCancel(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
-        super(nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
+        TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
+        super(type, nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
     }
 
     public static TxTypeFeeDelegatedCancel createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
-        return new TxTypeFeeDelegatedCancel(nonce, gasPrice, gasLimit, from);
+        TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
+        return new TxTypeFeeDelegatedCancel(type, nonce, gasPrice, gasLimit, from);
     }
 
     /**
@@ -72,9 +72,10 @@ public class TxTypeFeeDelegatedCancel extends TxTypeFeeDelegate {
             BigInteger gasPrice = ((RlpString) values.get(1)).asPositiveBigInteger();
             BigInteger gasLimit = ((RlpString) values.get(2)).asPositiveBigInteger();
             String from = ((RlpString) values.get(3)).asString();
+            TxType.Type type= Type.FEE_DELEGATED_CANCEL;
 
             TxTypeFeeDelegatedCancel tx
-                    = TxTypeFeeDelegatedCancel.createTransaction(nonce, gasPrice, gasLimit, from);
+                    = TxTypeFeeDelegatedCancel.createTransaction(type, nonce, gasPrice, gasLimit, from);
             tx.addSignatureData(values, 4);
             return tx;
         } catch (Exception e) {

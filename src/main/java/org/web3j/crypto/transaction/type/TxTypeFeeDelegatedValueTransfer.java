@@ -19,17 +19,17 @@ import org.web3j.utils.BytesUtils;
 import org.web3j.utils.KlayTransactionUtils;
 import org.web3j.utils.Numeric;
 
-public class TxTypeFeeDelegatedValueTransfer extends TxTypeFeeDelegate implements ITransaction {
+public class TxTypeFeeDelegatedValueTransfer extends TxTypeFeeDelegate   {
 
-    protected TxTypeFeeDelegatedValueTransfer(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
-            BigInteger value, String from) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+    protected TxTypeFeeDelegatedValueTransfer(TxType.Type type, BigInteger nonce, BigInteger gasPrice,
+            BigInteger gasLimit, String to, BigInteger value, String from) {
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
     }
 
     public static TxTypeFeeDelegatedValueTransfer createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
+            TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
             String recipient, BigInteger value, String from) {
-        return new TxTypeFeeDelegatedValueTransfer(nonce, gasPrice, gasLimit, recipient, value, from);
+        return new TxTypeFeeDelegatedValueTransfer(type, nonce, gasPrice, gasLimit, recipient, value, from);
     }
 
     /**
@@ -80,7 +80,9 @@ public class TxTypeFeeDelegatedValueTransfer extends TxTypeFeeDelegate implement
             String to = ((RlpString) values.get(3)).asString();
             BigInteger value = ((RlpString) values.get(4)).asPositiveBigInteger();
             String from = ((RlpString) values.get(5)).asString();
-            TxTypeFeeDelegatedValueTransfer tx = TxTypeFeeDelegatedValueTransfer.createTransaction(nonce, gasPrice,
+            TxType.Type type = Type.FEE_DELEGATED_VALUE_TRANSFER;
+            TxTypeFeeDelegatedValueTransfer tx = TxTypeFeeDelegatedValueTransfer.createTransaction(type, nonce,
+                    gasPrice,
                     gasLimit, to, value, from);
             tx.addSignatureData(values, 6);
             return tx;

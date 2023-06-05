@@ -29,17 +29,17 @@ public class TxTypeFeeDelegatedSmartContractDeploy extends TxTypeFeeDelegate {
     private final BigInteger codeFormat;
 
     public TxTypeFeeDelegatedSmartContractDeploy(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
             String from, byte[] payload, BigInteger codeFormat) {
-        super(nonce, gasPrice, gasLimit, from, "", value);
+        super(type, nonce, gasPrice, gasLimit, from, "", value);
         this.payload = payload;
         this.codeFormat = codeFormat;
     }
 
     public static TxTypeFeeDelegatedSmartContractDeploy createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
             BigInteger value, String from, byte[] payload, BigInteger codeFormat) {
-        return new TxTypeFeeDelegatedSmartContractDeploy(nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
+        return new TxTypeFeeDelegatedSmartContractDeploy(type, nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
     }
 
     public byte[] getPayload() {
@@ -100,9 +100,10 @@ public class TxTypeFeeDelegatedSmartContractDeploy extends TxTypeFeeDelegate {
             String from = ((RlpString) values.get(5)).asString();
             byte[] payload = ((RlpString) values.get(6)).getBytes();
             BigInteger codeFormat = ((RlpString) values.get(8)).asPositiveBigInteger();
+            TxType.Type type = Type.FEE_DELEGATED_SMART_CONTRACT_DEPLOY;
 
             TxTypeFeeDelegatedSmartContractDeploy tx
-                    = new TxTypeFeeDelegatedSmartContractDeploy(nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
+                    = new TxTypeFeeDelegatedSmartContractDeploy(type, nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
             tx.addSignatureData(values, 9);
             return tx;
         } catch (Exception e) {

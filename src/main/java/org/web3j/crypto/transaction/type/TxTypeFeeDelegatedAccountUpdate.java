@@ -6,10 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.KlayCredentials;
 import org.web3j.crypto.KlayRawTransaction;
 import org.web3j.crypto.KlaySignatureData;
 import org.web3j.crypto.Sign.SignatureData;
+import org.web3j.crypto.transaction.account.AccountKey;
+import org.web3j.crypto.transaction.account.AccountKeyDecoder;
 import org.web3j.rlp.RlpDecoder;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
@@ -19,42 +22,28 @@ import org.web3j.utils.BytesUtils;
 import org.web3j.utils.KlayTransactionUtils;
 import org.web3j.utils.Numeric;
 
-public class TxTypeSmartContractDeploy extends AbstractTxType   {
+public class TxTypeFeeDelegatedAccountUpdate extends TxTypeFeeDelegate {
 
     /**
-     * code of the newly deployed smart contract
+     * newly created accountKey
      */
-    private final byte[] payload;
+    private final AccountKey accountKey;
 
-    /**
-     * The code format of smart contract code
-     */
-    private final BigInteger codeFormat;
-
-    public TxTypeSmartContractDeploy(
-        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
-            BigInteger value, String from, byte[] payload, BigInteger codeFormat) {
-        super(type, nonce, gasPrice, gasLimit, from, "", value);
-        this.payload = payload;
-        this.codeFormat = codeFormat;
+    public TxTypeFeeDelegatedAccountUpdate(TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, AccountKey accountKey) {
+        super(type, nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
+        this.accountKey = accountKey;
     }
 
-    public static TxTypeSmartContractDeploy createTransaction(
-        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
-            BigInteger value, String from, byte[] payload, BigInteger codeFormat) {
-        return new TxTypeSmartContractDeploy(type, nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
+    public static TxTypeFeeDelegatedAccountUpdate createTransaction(TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, AccountKey accountKey) {
+        return new TxTypeFeeDelegatedAccountUpdate(type, nonce, gasPrice, gasLimit, from, accountKey);
     }
 
-    public byte[] getPayload() {
-        return payload;
-    }
-
-    public BigInteger getCodeFormat() {
-        return codeFormat;
+    public AccountKey getAccountKey() {
+        return accountKey;
     }
 
     /**
-     * create RlpType List which contains nonce, gas price, gas limit, to, value, from, payload and isHumanReadable.
+     * create RlpType List which contains nonce, gas price, gas limit, from and accountKey.
      * List elements can be different depending on transaction type.
      *
      * @return List RlpType List
@@ -62,52 +51,47 @@ public class TxTypeSmartContractDeploy extends AbstractTxType   {
     @Override
     public List<RlpType> rlpValues() {
         List<RlpType> values = super.rlpValues();
-        values.add(RlpString.create(Numeric.hexStringToByteArray(getTo())));
-        values.add(RlpString.create(getValue()));
         values.add(RlpString.create(Numeric.hexStringToByteArray(getFrom())));
-        values.add(RlpString.create(getPayload()));
-        values.add(RlpString.create(0x0));
-        values.add(RlpString.create(getCodeFormat()));
+        values.add(RlpString.create(getAccountKey().toRlp()));
         return values;
     }
 
     /**
-     * This method is overridden as SMART_CONTRACT_DEPLOY type.
+     * This method is overridden as FEE_DELEGATED_ACCOUNT_UPDATE type.
      * The return value is used for rlp encoding.
      *
      * @return Type transaction type
      */
     @Override
     public Type getKlayType() {
-        return Type.SMART_CONTRACT_DEPLOY;
+        return Type.FEE_DELEGATED_ACCOUNT_UPDATE;
     }
 
     /**
      * decode transaction hash from sender to reconstruct transaction with fee payer signature.
      *
      * @param rawTransaction RLP-encoded signed transaction from sender
-     * @return TxTypeSmartContractDeploy decoded transaction
+     * @return TxTypeFeeDelegatedAccountUpdate decoded transaction
      */
-    public static TxTypeSmartContractDeploy decodeFromRawTransaction(byte[] rawTransaction) {
-        // TxHashRLP = type + encode([nonce, gasPrice, gas, to, value, from, input, humanReadable, codeFormat, txSignatures])
+    public static TxTypeFeeDelegatedAccountUpdate decodeFromRawTransaction(byte[] rawTransaction) {
+        //TxHashRLP = type + encode([nonce, gasPrice, gas, from, rlpEncodedKey, txSignatures, feePayer, feePayerSignatures])
         try {
             byte[] rawTransactionExceptType = KlayTransactionUtils.getRawTransactionNoType(rawTransaction);
+
             RlpList rlpList = RlpDecoder.decode(rawTransactionExceptType);
             List<RlpType> values = ((RlpList) rlpList.getValues().get(0)).getValues();
 
             BigInteger nonce = ((RlpString) values.get(0)).asPositiveBigInteger();
             BigInteger gasPrice = ((RlpString) values.get(1)).asPositiveBigInteger();
             BigInteger gasLimit = ((RlpString) values.get(2)).asPositiveBigInteger();
-            //String to = ((RlpString) values.get(3)).asString();
-            BigInteger value = ((RlpString) values.get(4)).asPositiveBigInteger();
-            String from = ((RlpString) values.get(5)).asString();
-            byte[] payload = ((RlpString) values.get(6)).getBytes();
-            BigInteger codeFormat = ((RlpString) values.get(8)).asPositiveBigInteger();
-            TxType.Type type = Type.SMART_CONTRACT_DEPLOY;
+            String from = ((RlpString) values.get(3)).asString();
+            String accountkeyRaw = ((RlpString) values.get(4)).asString();
+            TxType.Type type = Type.FEE_DELEGATED_ACCOUNT_UPDATE;
 
-            TxTypeSmartContractDeploy tx
-                    = new TxTypeSmartContractDeploy(type, nonce, gasPrice, gasLimit, value, from, payload, codeFormat);
-            tx.addSignatureData(values, 9);
+            TxTypeFeeDelegatedAccountUpdate tx
+                    = TxTypeFeeDelegatedAccountUpdate.createTransaction(type, nonce, gasPrice, gasLimit, from, AccountKeyDecoder.fromRlp(accountkeyRaw));
+            tx.addSignatureData(values, 5);
+
             return tx;
         } catch (Exception e) {
             throw new RuntimeException("There is a error in the processing of decoding tx");
@@ -116,10 +100,20 @@ public class TxTypeSmartContractDeploy extends AbstractTxType   {
 
     /**
      * @param rawTransaction RLP-encoded signed transaction from sender
-     * @return TxTypeSmartContractDeploy decoded transaction
+     * @return TxTypeFeeDelegatedAccountUpdate decoded transaction
      */
-    public static TxTypeSmartContractDeploy decodeFromRawTransaction(String rawTransaction) {
+    public static TxTypeFeeDelegatedAccountUpdate decodeFromRawTransaction(String rawTransaction) {
         return decodeFromRawTransaction(Numeric.hexStringToByteArray(Numeric.cleanHexPrefix(rawTransaction)));
+    }
+
+    /**
+     * get the keys you need to sign transactions
+     *
+     * @param credentials credentials for signing
+     * @return List of keys for signing
+     */
+    protected List<ECKeyPair> getEcKeyPairsForSenderSign(KlayCredentials credentials) {
+        return credentials.getEcKeyPairsForUpdateList();
     }
 
     @Override

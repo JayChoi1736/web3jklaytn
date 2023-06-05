@@ -19,15 +19,15 @@ import org.web3j.utils.BytesUtils;
 import org.web3j.utils.KlayTransactionUtils;
 import org.web3j.utils.Numeric;
 
-public class TxTypeCancel extends AbstractTxType implements ITransaction {
+public class TxTypeCancel extends AbstractTxType   {
     protected TxTypeCancel(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
-        super(nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
+            TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
+        super(type, nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
     }
 
     public static TxTypeCancel createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
-        return new TxTypeCancel(nonce, gasPrice, gasLimit, from);
+        TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from) {
+        return new TxTypeCancel(type, nonce, gasPrice, gasLimit, from);
     }
 
     /**
@@ -71,9 +71,10 @@ public class TxTypeCancel extends AbstractTxType implements ITransaction {
             BigInteger gasPrice = ((RlpString) values.get(1)).asPositiveBigInteger();
             BigInteger gasLimit = ((RlpString) values.get(2)).asPositiveBigInteger();
             String from = ((RlpString) values.get(3)).asString();
+            TxType.Type type = Type.CANCEL;
 
             TxTypeCancel tx
-                    = TxTypeCancel.createTransaction(nonce, gasPrice, gasLimit, from);
+                    = TxTypeCancel.createTransaction(type, nonce, gasPrice, gasLimit, from);
             tx.addSignatureData(values, 4);
             return tx;
         } catch (Exception e) {

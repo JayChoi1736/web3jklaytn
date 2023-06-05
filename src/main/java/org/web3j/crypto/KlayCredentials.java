@@ -34,8 +34,6 @@ public class KlayCredentials {
     private final String address;
 
     private KlayCredentials(ECKeyPair ecKeyPair, String address) {
-        //super(ecKeyPair, address);
-        create(ecKeyPair);
         this.ecKeyPairForTransactionList = Collections.unmodifiableList(Arrays.asList(ecKeyPair));
         this.ecKeyPairForUpdateList = Collections.unmodifiableList(Collections.emptyList());
         this.ecKeyPairForFeeFeePayerList = Collections.unmodifiableList(Collections.emptyList());

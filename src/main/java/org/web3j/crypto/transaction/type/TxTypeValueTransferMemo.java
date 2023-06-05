@@ -23,21 +23,21 @@ import org.web3j.utils.Numeric;
  * For the specification, refer to p4 of the <a href="http://gavwood.com/paper.pdf">yellow
  * paper</a>.
  */
-public class TxTypeValueTransferMemo extends AbstractTxType implements ITransaction {
+public class TxTypeValueTransferMemo extends AbstractTxType   {
 
     /**
      * memo
      */
     private final byte[] payload;
 
-    protected TxTypeValueTransferMemo(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+    protected TxTypeValueTransferMemo(TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload) {
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
         this.payload = payload;
     }
 
     public static TxTypeValueTransferMemo createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload) {
-        return new TxTypeValueTransferMemo(nonce, gasPrice, gasLimit, to, value, from, payload);
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload) {
+        return new TxTypeValueTransferMemo(type, nonce, gasPrice, gasLimit, to, value, from, payload);
     }
 
     /**
@@ -60,9 +60,9 @@ public class TxTypeValueTransferMemo extends AbstractTxType implements ITransact
             BigInteger value = ((RlpString) values.get(4)).asPositiveBigInteger();
             String from = ((RlpString) values.get(5)).asString();
             byte[] payload = ((RlpString) values.get(6)).getBytes();
-
+            TxType.Type type = Type.VALUE_TRANSFER_MEMO;
             TxTypeValueTransferMemo tx
-                    = TxTypeValueTransferMemo.createTransaction(nonce, gasPrice, gasLimit, to, value, from, payload);
+                    = TxTypeValueTransferMemo.createTransaction(type, nonce, gasPrice, gasLimit, to, value, from, payload);
             tx.addSignatureData(values, 7);
             return tx;
         } catch (Exception e) {

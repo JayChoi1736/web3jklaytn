@@ -27,16 +27,16 @@ public class TxTypeFeeDelegatedSmartContractExecution extends TxTypeFeeDelegate 
     private final byte[] payload;
 
     protected TxTypeFeeDelegatedSmartContractExecution(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String from, byte[] payload) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
         this.payload = payload;
     }
 
     public static TxTypeFeeDelegatedSmartContractExecution createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String from, byte[] payload) {
-        return new TxTypeFeeDelegatedSmartContractExecution(nonce, gasPrice, gasLimit, to, value, from, payload);
+        return new TxTypeFeeDelegatedSmartContractExecution(type, nonce, gasPrice, gasLimit, to, value, from, payload);
     }
 
     public byte[] getPayload() {
@@ -89,9 +89,10 @@ public class TxTypeFeeDelegatedSmartContractExecution extends TxTypeFeeDelegate 
             BigInteger value = ((RlpString) values.get(4)).asPositiveBigInteger();
             String from = ((RlpString) values.get(5)).asString();
             byte[] payload = ((RlpString) values.get(6)).getBytes();
+            TxType.Type type = Type.FEE_DELEGATED_SMART_CONTRACT_EXECUTION;
 
             TxTypeFeeDelegatedSmartContractExecution tx
-                    = TxTypeFeeDelegatedSmartContractExecution.createTransaction(nonce, gasPrice, gasLimit, to, value, from, payload);
+                    = TxTypeFeeDelegatedSmartContractExecution.createTransaction(type, nonce, gasPrice, gasLimit, to, value, from, payload);
             tx.addSignatureData(values, 7);
             return tx;
         } catch (Exception e) {

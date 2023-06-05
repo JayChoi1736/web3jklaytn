@@ -32,15 +32,15 @@ public class TxTypeFeeDelegatedValueTransferMemoWithRatio extends TxTypeFeeDeleg
      */
     private final BigInteger feeRatio;
 
-    protected TxTypeFeeDelegatedValueTransferMemoWithRatio(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
+    protected TxTypeFeeDelegatedValueTransferMemoWithRatio(TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit,
                                                            String to, BigInteger value, String from, byte[] payload, BigInteger feeRatio) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
         this.payload = payload;
         this.feeRatio = feeRatio;
     }
 
-    public static TxTypeFeeDelegatedValueTransferMemoWithRatio createTransaction(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload, BigInteger feeRatio) {
-        return new TxTypeFeeDelegatedValueTransferMemoWithRatio(nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
+    public static TxTypeFeeDelegatedValueTransferMemoWithRatio createTransaction(TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from, byte[] payload, BigInteger feeRatio) {
+        return new TxTypeFeeDelegatedValueTransferMemoWithRatio(type, nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
     }
 
     public byte[] getPayload() {
@@ -100,8 +100,9 @@ public class TxTypeFeeDelegatedValueTransferMemoWithRatio extends TxTypeFeeDeleg
             String from = ((RlpString) values.get(5)).asString();
             byte[] payload = ((RlpString) values.get(6)).getBytes();
             BigInteger feeRatio = ((RlpString) values.get(7)).asPositiveBigInteger();
+            TxType.Type type = Type.FEE_DELEGATED_VALUE_TRANSFER_MEMO_WITH_RATIO;
             TxTypeFeeDelegatedValueTransferMemoWithRatio tx
-                    = TxTypeFeeDelegatedValueTransferMemoWithRatio.createTransaction(nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
+                    = TxTypeFeeDelegatedValueTransferMemoWithRatio.createTransaction(type, nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
             tx.addSignatureData(values, 8);
             return tx;
         } catch (Exception e) {

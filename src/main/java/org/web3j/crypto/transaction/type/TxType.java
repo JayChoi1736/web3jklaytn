@@ -39,12 +39,14 @@ public interface TxType {
      *
      * @param credentials credential info of a signer
      * @param chainId     chain ID
-     * @return KlayRawTransaction this contains transaction hash and processed signature data
+     * @return KlayRawTransaction this contains transaction hash and processed
+     *         signature data
      */
     KlayRawTransaction sign(KlayCredentials credentials, long chainId);
 
     /**
-     * create RlpType List. List elements can be different depending on transaction type.
+     * create RlpType List. List elements can be different depending on transaction
+     * type.
      *
      * @return List RlpType List
      */
@@ -82,12 +84,14 @@ public interface TxType {
         ACCOUNT_UPDATE((byte) 0x20),
 
         /**
-         * This updates the key of the account. The transaction fee is paid by the fee payer.
+         * This updates the key of the account. The transaction fee is paid by the fee
+         * payer.
          */
         FEE_DELEGATED_ACCOUNT_UPDATE((byte) 0x21),
 
         /**
-         * This updates the key of the account. The given ratio of the transaction fee is paid by the fee payer.
+         * This updates the key of the account. The given ratio of the transaction fee
+         * is paid by the fee payer.
          */
         FEE_DELEGATED_ACCOUNT_UPDATE_WITH_RATIO((byte) 0x22),
 
@@ -102,7 +106,8 @@ public interface TxType {
         VALUE_TRANSFER_MEMO((byte) 0x10),
 
         /**
-         * This is a value transfer transaction with a fee payer. The fee payer address can be different from the sender.
+         * This is a value transfer transaction with a fee payer. The fee payer address
+         * can be different from the sender.
          */
         FEE_DELEGATED_VALUE_TRANSFER((byte) 0x09),
 
@@ -117,7 +122,8 @@ public interface TxType {
         FEE_DELEGATED_VALUE_TRANSFER_MEMO((byte) 0x11),
 
         /**
-         * This transfers KLAY with a data. The given ratio of the transaction fee is paid by the fee payer.
+         * This transfers KLAY with a data. The given ratio of the transaction fee is
+         * paid by the fee payer.
          */
         FEE_DELEGATED_VALUE_TRANSFER_MEMO_WITH_RATIO((byte) 0x12),
 
@@ -132,7 +138,8 @@ public interface TxType {
         FEE_DELEGATED_SMART_CONTRACT_DEPLOY((byte) 0x29),
 
         /**
-         * This deploys a smart contract. The given ratio of the transaction fee is paid by the fee payer.
+         * This deploys a smart contract. The given ratio of the transaction fee is paid
+         * by the fee payer.
          */
         FEE_DELEGATED_SMART_CONTRACT_DEPLOY_WITH_RATIO((byte) 0x2a),
 
@@ -142,12 +149,14 @@ public interface TxType {
         SMART_CONTRACT_EXECUTION((byte) 0x30),
 
         /**
-         * This executes a smart contract with the given data. The fee is paid by the fee payer.
+         * This executes a smart contract with the given data. The fee is paid by the
+         * fee payer.
          */
         FEE_DELEGATED_SMART_CONTRACT_EXECUTION((byte) 0x31),
 
         /**
-         * This executes a smart contract with the given data. The given ratio of the transaction fee is paid by the fee payer.
+         * This executes a smart contract with the given data. The given ratio of the
+         * transaction fee is paid by the fee payer.
          */
         FEE_DELEGATED_SMART_CONTRACT_EXECUTION_WITH_RATIO((byte) 0x32),
 
@@ -157,17 +166,20 @@ public interface TxType {
         CANCEL((byte) 0x38),
 
         /**
-         * This cancels the transaction with the same nonce in the txpool. The fee is paid by the fee payer.
+         * This cancels the transaction with the same nonce in the txpool. The fee is
+         * paid by the fee payer.
          */
         FEE_DELEGATED_CANCEL((byte) 0x39),
 
         /**
-         * This cancels the transaction with the same nonce in the txpool. The given ratio of the transaction fee is paid by the fee payer.
+         * This cancels the transaction with the same nonce in the txpool. The given
+         * ratio of the transaction fee is paid by the fee payer.
          */
         FEE_DELEGATED_CANCEL_WITH_RATIO((byte) 0x3a),
 
         /**
-         * This is a transaction for anchoring child chain data. This transaction is generated and submitted by a servicechain.
+         * This is a transaction for anchoring child chain data. This transaction is
+         * generated and submitted by a servicechain.
          * Submitting transactions of this type via RPC is prohibited.
          */
         CHAIN_DATA_ANCHORING((byte) 0x48);
@@ -190,5 +202,24 @@ public interface TxType {
             }
             return LEGACY;
         }
+
+        public static boolean isFeeDelegated(Type type) {
+            return type == FEE_DELEGATED_ACCOUNT_UPDATE ||
+                    type == FEE_DELEGATED_CANCEL ||
+                    type == FEE_DELEGATED_SMART_CONTRACT_DEPLOY ||
+                    type == FEE_DELEGATED_SMART_CONTRACT_EXECUTION ||
+                    type == FEE_DELEGATED_VALUE_TRANSFER ||
+                    type == FEE_DELEGATED_VALUE_TRANSFER_MEMO;
+        }
+
+        public static boolean isPartialFeeDelegated(Type type) {
+            return type == FEE_DELEGATED_ACCOUNT_UPDATE_WITH_RATIO ||
+                    type == FEE_DELEGATED_CANCEL_WITH_RATIO ||
+                    type == FEE_DELEGATED_SMART_CONTRACT_DEPLOY_WITH_RATIO ||
+                    type == FEE_DELEGATED_SMART_CONTRACT_EXECUTION_WITH_RATIO ||
+                    type == FEE_DELEGATED_VALUE_TRANSFER_WITH_RATIO ||
+                    type == FEE_DELEGATED_VALUE_TRANSFER_MEMO_WITH_RATIO;
+        }
+
     }
 }

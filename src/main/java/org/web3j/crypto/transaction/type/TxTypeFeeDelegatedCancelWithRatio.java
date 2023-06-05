@@ -20,7 +20,7 @@ import org.web3j.utils.KlayTransactionUtils;
 import org.web3j.utils.Numeric;
 
 
-public class TxTypeFeeDelegatedCancelWithRatio extends TxTypeFeeDelegate implements ITransaction{
+public class TxTypeFeeDelegatedCancelWithRatio extends TxTypeFeeDelegate  {
 
     /**
      * Fee ratio of the fee payer. If it is 30, 30% of the fee will be paid by the fee payer.
@@ -29,14 +29,14 @@ public class TxTypeFeeDelegatedCancelWithRatio extends TxTypeFeeDelegate impleme
     private final BigInteger feeRatio;
 
     protected TxTypeFeeDelegatedCancelWithRatio(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, BigInteger feeRatio) {
-        super(nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, BigInteger feeRatio) {
+        super(type, nonce, gasPrice, gasLimit, from, "", BigInteger.ZERO);
         this.feeRatio = feeRatio;
     }
 
     public static TxTypeFeeDelegatedCancelWithRatio createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, BigInteger feeRatio) {
-        return new TxTypeFeeDelegatedCancelWithRatio(nonce, gasPrice, gasLimit, from, feeRatio);
+        TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String from, BigInteger feeRatio) {
+        return new TxTypeFeeDelegatedCancelWithRatio(type, nonce, gasPrice, gasLimit, from, feeRatio);
     }
 
     public BigInteger getFeeRatio() {
@@ -86,9 +86,10 @@ public class TxTypeFeeDelegatedCancelWithRatio extends TxTypeFeeDelegate impleme
             BigInteger gasLimit = ((RlpString) values.get(2)).asPositiveBigInteger();
             String from = ((RlpString) values.get(3)).asString();
             BigInteger feeRatio = ((RlpString) values.get(4)).asPositiveBigInteger();
+            TxType.Type type = Type.FEE_DELEGATED_CANCEL_WITH_RATIO;
 
             TxTypeFeeDelegatedCancelWithRatio tx
-                    = TxTypeFeeDelegatedCancelWithRatio.createTransaction(nonce, gasPrice, gasLimit, from, feeRatio);
+                    = TxTypeFeeDelegatedCancelWithRatio.createTransaction(type, nonce, gasPrice, gasLimit, from, feeRatio);
             tx.addSignatureData(values, 5);
             return tx;
         } catch (Exception e) {

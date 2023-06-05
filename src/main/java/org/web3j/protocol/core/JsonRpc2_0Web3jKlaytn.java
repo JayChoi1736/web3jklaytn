@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import io.reactivex.Flowable;
 
+import org.web3j.protocol.KlaytnWeb3j;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.methods.request.ShhFilter;
@@ -100,8 +101,8 @@ public class JsonRpc2_0Web3jKlaytn extends JsonRpc2_0Web3j {
         super(web3jService, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
     }
 
-    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
-            klaySendTransaction(Transaction transaction) {
+    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction> klaySendTransaction(
+            Transaction transaction) {
         return new Request<>(
                 "klay_sendTransaction",
                 Arrays.asList(transaction),
@@ -109,14 +110,15 @@ public class JsonRpc2_0Web3jKlaytn extends JsonRpc2_0Web3j {
                 org.web3j.protocol.core.methods.response.EthSendTransaction.class);
     }
 
-    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
-    klaySendRawTransaction(String signedTransactionData) {
-return new Request<>(
-        "klay_sendRawTransaction",
-        Arrays.asList(signedTransactionData),
-        web3jService,
-        org.web3j.protocol.core.methods.response.EthSendTransaction.class);
-}
+    @Override
+    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction> ethSendRawTransaction(
+            String signedTransactionData) {
+        return new Request<>(
+                "klay_sendRawTransaction",
+                Arrays.asList(signedTransactionData),
+                web3jService,
+                org.web3j.protocol.core.methods.response.EthSendTransaction.class);
+    }
 
     public Request<?, EthChainId> klayChainId() {
         return new Request<>(
@@ -124,4 +126,3 @@ return new Request<>(
     }
 
 }
-

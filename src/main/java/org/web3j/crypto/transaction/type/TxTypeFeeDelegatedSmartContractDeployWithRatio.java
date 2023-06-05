@@ -38,18 +38,18 @@ public class TxTypeFeeDelegatedSmartContractDeployWithRatio extends TxTypeFeeDel
     private final BigInteger codeFormat;
 
     public TxTypeFeeDelegatedSmartContractDeployWithRatio(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
+        TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
             String from, byte[] payload, BigInteger feeRatio, BigInteger codeFormat) {
-        super(nonce, gasPrice, gasLimit, from, "", value);
+        super(type, nonce, gasPrice, gasLimit, from, "", value);
         this.payload = payload;
         this.feeRatio = feeRatio;
         this.codeFormat = codeFormat;
     }
 
     public static TxTypeFeeDelegatedSmartContractDeployWithRatio createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
             String from, byte[] payload, BigInteger feeRatio, BigInteger codeFormat) {
-        return new TxTypeFeeDelegatedSmartContractDeployWithRatio(nonce, gasPrice, gasLimit, value, from, payload, feeRatio, codeFormat);
+        return new TxTypeFeeDelegatedSmartContractDeployWithRatio(type, nonce, gasPrice, gasLimit, value, from, payload, feeRatio, codeFormat);
     }
 
     public byte[] getPayload() {
@@ -116,9 +116,9 @@ public class TxTypeFeeDelegatedSmartContractDeployWithRatio extends TxTypeFeeDel
             byte[] payload = ((RlpString) values.get(6)).getBytes();
             BigInteger feeRatio = ((RlpString) values.get(8)).asPositiveBigInteger();
             BigInteger codeFormat = ((RlpString) values.get(9)).asPositiveBigInteger();
-
+            TxType.Type type = Type.FEE_DELEGATED_SMART_CONTRACT_DEPLOY_WITH_RATIO;
             TxTypeFeeDelegatedSmartContractDeployWithRatio tx
-                    = new TxTypeFeeDelegatedSmartContractDeployWithRatio(nonce, gasPrice, gasLimit, value, from, payload, feeRatio, codeFormat);
+                    = new TxTypeFeeDelegatedSmartContractDeployWithRatio(type, nonce, gasPrice, gasLimit, value, from, payload, feeRatio, codeFormat);
             tx.addSignatureData(values, 10);
             return tx;
         } catch (Exception e) {

@@ -33,17 +33,17 @@ public class TxTypeFeeDelegatedSmartContractExecutionWithRatio extends TxTypeFee
     private final BigInteger feeRatio;
 
     protected TxTypeFeeDelegatedSmartContractExecutionWithRatio(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String from, byte[] payload, BigInteger feeRatio) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
         this.payload = payload;
         this.feeRatio = feeRatio;
     }
 
     public static TxTypeFeeDelegatedSmartContractExecutionWithRatio createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String from, byte[] payload, BigInteger feeRatio) {
-        return new TxTypeFeeDelegatedSmartContractExecutionWithRatio(nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
+        return new TxTypeFeeDelegatedSmartContractExecutionWithRatio(type, nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
     }
 
     public byte[] getPayload() {
@@ -103,9 +103,9 @@ public class TxTypeFeeDelegatedSmartContractExecutionWithRatio extends TxTypeFee
             String from = ((RlpString) values.get(5)).asString();
             byte[] payload = ((RlpString) values.get(6)).getBytes();
             BigInteger feeRatio = ((RlpString) values.get(7)).asPositiveBigInteger();
-
+            TxType.Type type = Type.FEE_DELEGATED_SMART_CONTRACT_EXECUTION_WITH_RATIO;
             TxTypeFeeDelegatedSmartContractExecutionWithRatio tx
-                    = TxTypeFeeDelegatedSmartContractExecutionWithRatio.createTransaction(nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
+                    = TxTypeFeeDelegatedSmartContractExecutionWithRatio.createTransaction(type, nonce, gasPrice, gasLimit, to, value, from, payload, feeRatio);
             tx.addSignatureData(values, 8);
             return tx;
         } catch (Exception e) {

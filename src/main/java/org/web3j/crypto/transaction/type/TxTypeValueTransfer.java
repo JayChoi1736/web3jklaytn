@@ -23,16 +23,16 @@ import org.web3j.utils.Numeric;
  * For the specification, refer to p4 of the <a href="http://gavwood.com/paper.pdf">yellow
  * paper</a>.
  */
-public class TxTypeValueTransfer extends AbstractTxType implements ITransaction {
+public class TxTypeValueTransfer extends AbstractTxType   {
 
-    public TxTypeValueTransfer(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from) {
-        super(nonce, gasPrice, gasLimit, from, to, value);
+    public TxTypeValueTransfer(TxType.Type type, BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, BigInteger value, String from) {
+        super(type, nonce, gasPrice, gasLimit, from, to, value);
     }
 
     public static TxTypeValueTransfer createTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
+        TxType.Type type,BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
             BigInteger value, String from) {
-        return new TxTypeValueTransfer(nonce, gasPrice, gasLimit, to, value, from);
+        return new TxTypeValueTransfer(type, nonce, gasPrice, gasLimit, to, value, from);
     }
 
     /**
@@ -54,9 +54,9 @@ public class TxTypeValueTransfer extends AbstractTxType implements ITransaction 
             String to = ((RlpString) values.get(3)).asString();
             BigInteger value = ((RlpString) values.get(4)).asPositiveBigInteger();
             String from = ((RlpString) values.get(5)).asString();
-
+            TxType.Type type = Type.VALUE_TRANSFER;
             TxTypeValueTransfer tx
-                    = TxTypeValueTransfer.createTransaction(nonce, gasPrice, gasLimit, to, value, from);
+                    = TxTypeValueTransfer.createTransaction(type, nonce, gasPrice, gasLimit, to, value, from);
             tx.addSignatureData(values, 6);
             return tx;
         } catch (Exception e) {
