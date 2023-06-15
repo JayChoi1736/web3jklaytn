@@ -62,7 +62,7 @@ public class KlaytnTransactionEncoder extends TransactionEncoder{
     public static byte[] signMessage(byte[] encodedSenderTransaction, long chainId, KlayCredentials credentials) {
 
         TxType.Type type = KlayTransactionUtils.getType(encodedSenderTransaction);
-        if (!Type.isFeeDelegated(type) && Type.isPartialFeeDelegated(type)) {
+        if (!Type.isFeeDelegated(type) && !Type.isPartialFeeDelegated(type)) {
             AbstractTxType encodedTx;
             switch (type) {
                 case ACCOUNT_UPDATE:
