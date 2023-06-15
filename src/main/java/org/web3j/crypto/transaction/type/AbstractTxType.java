@@ -180,22 +180,10 @@ public abstract class AbstractTxType implements TxType, ITransaction {
         rlpTypeList.addAll(signatureData.toRlpList().getValues());
         byte[] encodedTransaction2 = RlpEncoder.encode(new RlpList(rlpTypeList));
 
-        for (ECKeyPair ecKeyPair : getEcKeyPairsForSenderSign(credentials)) {
-            Sign.SignatureData signedSignatureData = Sign.signMessage(encodedTransaction2, ecKeyPair);
-            senderSignatureDataList.add(KlaySignatureData.createEip155KlaySignatureData(signedSignatureData, chainId));
-        }
+        Sign.SignatureData signedSignatureData = Sign.signMessage(encodedTransaction2, credentials.getEcKeyPair());
+        senderSignatureDataList.add(KlaySignatureData.createEip155KlaySignatureData(signedSignatureData, chainId));
 
         return senderSignatureDataList;
-    }
-
-    /**
-     * get the keys you need to sign transactions
-     *
-     * @param credentials credentials for signing
-     * @return List of keys for signing
-     */
-    protected List<ECKeyPair> getEcKeyPairsForSenderSign(KlayCredentials credentials) {
-        return credentials.getEcKeyPairsForTransactionList();
     }
 
     public BigInteger getNonce() {

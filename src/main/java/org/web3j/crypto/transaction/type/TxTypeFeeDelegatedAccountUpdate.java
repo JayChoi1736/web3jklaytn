@@ -3,7 +3,6 @@ package org.web3j.crypto.transaction.type;
 import java.math.BigInteger;
 import java.util.List;
 import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.KlayCredentials;
 import org.web3j.crypto.Sign.SignatureData;
 import org.web3j.crypto.transaction.account.AccountKey;
 import org.web3j.crypto.transaction.account.AccountKeyDecoder;
@@ -96,16 +95,6 @@ public class TxTypeFeeDelegatedAccountUpdate extends TxTypeFeeDelegate {
      */
     public static TxTypeFeeDelegatedAccountUpdate decodeFromRawTransaction(String rawTransaction) {
         return decodeFromRawTransaction(Numeric.hexStringToByteArray(Numeric.cleanHexPrefix(rawTransaction)));
-    }
-
-    /**
-     * get the keys you need to sign transactions
-     *
-     * @param credentials credentials for signing
-     * @return List of keys for signing
-     */
-    protected List<ECKeyPair> getEcKeyPairsForSenderSign(KlayCredentials credentials) {
-        return credentials.getEcKeyPairsForUpdateList();
     }
 
     @Override

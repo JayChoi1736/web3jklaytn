@@ -92,10 +92,8 @@ public class FeePayer {
         rlpTypeList.addAll(signatureData.toRlpList().getValues());
         byte[] encodedTransaction = RlpEncoder.encode(new RlpList(rlpTypeList));
 
-        for (ECKeyPair ecKeyPair : credentials.getEcKeyPairsForFeePayerList()) {
-            Sign.SignatureData signedSignatureData = Sign.signMessage(encodedTransaction, ecKeyPair);
+            Sign.SignatureData signedSignatureData = Sign.signMessage(encodedTransaction, credentials.getEcKeyPair());
             feePayerSignatureDataSet.add(KlaySignatureData.createEip155KlaySignatureData(signedSignatureData, chainId));
-        }
 
         return feePayerSignatureDataSet;
     }
